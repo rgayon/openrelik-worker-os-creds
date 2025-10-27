@@ -16,6 +16,7 @@ import os
 
 from typing import Callable
 
+from openrelik_common import telemetry
 from openrelik_worker_common.file_utils import create_output_file
 from openrelik_worker_common.task_utils import create_task_result, get_input_files
 from openrelik_worker_common.reporting import serialize_file_report
@@ -63,6 +64,10 @@ def task_factory(
         output_files = []
         file_reports = []
         task_report = None
+
+        telemetry.add_attribute_to_current_span("input_files", input_files)
+        telemetry.add_attribute_to_current_span("task_config", task_config)
+        telemetry.add_attribute_to_current_span("workflow_id", workflow_id)
 
         if operate_on_each_file:
             for input_file in input_files:
